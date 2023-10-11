@@ -54,7 +54,7 @@ function Form() {
   };
 
   return (
-    <div className="app">
+    <div className="container">
       <form onSubmit={handleSubmit(onSubmit)} className="form">
         <h2 className="title">Form</h2>
         <FormControl>
