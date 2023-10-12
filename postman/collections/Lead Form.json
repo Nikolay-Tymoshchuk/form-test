@@ -1,0 +1,48 @@
+{
+	"info": {
+		"_postman_id": "1b7620c6-81bd-4c8f-b2d8-d8a4999246c0",
+		"name": "Lead Form",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "20753507-1b7620c6-81bd-4c8f-b2d8-d8a4999246c0"
+	},
+	"item": [
+		{
+			"name": "https://dev.api.cmaxcrm.com/api/integration?api_token=8mCmTfu96fV20TIburF2",
+			"id": "b2fe178b-358a-4adc-bc73-8c5d9bc7b711",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"affiliate_id\": 15,\n  \"flow_id\": 3,\n  \"user_ip\": \"77.137.74.142\",\n  \"first_name\": \"Sonic\",\n  \"last_name\": \"Dowson\",\n  \"email\": \"user@example.eu\",\n  \"phone\": \"+380123465789\",\n  \"campaign\": \"campaign\",\n  \"sub_campaign\": \"sub_campaign\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}api/integration?api_token=8mCmTfu96fV20TIburF2",
+					"host": [
+						"{{base_url}}api"
+					],
+					"path": [
+						"integration"
+					],
+					"query": [
+						{
+							"key": "api_token",
+							"value": "8mCmTfu96fV20TIburF2",
+							"description": "affiliate api token"
+						}
+					]
+				},
+				"description": "### **Example of request body:**\n\n{  \n\"affiliate_id\": 15,  \n\"flow_id\": 3,  \n\"user_ip\": \"77.137.74.142\",  \n\"first_name\": \"Sonic\",  \n\"last_name\": \"Dowson\",  \n\"email\": \"[user@example.eu](https://mailto:user@example.eu)\",  \n\"phone\": \"+380123465789\",  \n\"campaign\": \"campaign\",  \n\"sub_campaign\": \"sub_campaign\"  \n}\n\n#### This fields we take from form fields\n\n\"first_name\": \"Sonic\",  \n\"last_name\": \"Dowson\",  \n\"email\": \"[user@example.eu](https://mailto:user@example.eu)\",  \n\"phone\": \"+380123465789\"\n\n#### Parameter **user_ip** you should calculate.\n\n#### Other options you hardcode manually. ( affiliate_id and flow_id should have type number)\n\nForm submit should have next logic\n\n###### (for better understanding we use native js code )\n\n``` bash\nconst onSubmit = async formData => {\n    const url = 'https://dev.api.cmaxcrm.com/api/integration'; // address of your api\n    const token = '8mCmTfu96fV20TIburF2'; // affiliate api token\n    //So full url with token should be like this\n    // https://dev.api.cmaxcrm.com/api/integration?api_token=8mCmTfu96fV20TIburF2\n    const fullUrl = `${url}?api_token=${token}`;\n    try {\n      // get user ip (you can use any other method to get user ip)\n      const user_ip = await fetch('https://api.ipify.org?format=json')\n        .then(response => response.json())\n        .then(data => data.ip);\n      const reqData = {\n        affiliate_id: 15, // your affiliate id (number)\n        flow_id: 3, // flow id (number)\n        user_ip: user_ip, //got it from above (string)\n        campaign: 'campaign', // campaign name\n        sub_campaign: 'sub_campaign', // sub campaign name\n        // data from the form fields below\n        first_name: formData.first_name,\n        last_name: formData.last_name,\n        email: formData.email,\n        phone: formData.phone,\n      };\n      const response = await fetch(fullUrl, {\n        method: 'POST',\n        headers: { 'Content-Type': 'application/json' },\n        body: JSON.stringify(reqData),\n      }); // send request to you api\n      console.log('response', response);\n      const {\n        data: { autologin },\n      } = await response.json(); // get autologin link from response\n      window.location.href = autologin; // open autologin link\n    } catch (error) {\n      alert(error.message); //error handling and customization of their output\n    }\n  };\n\n ```\n\n#### You also can add neccessary validation to the form fields and error handling/customization\n\nFull example source code you can find here\n\n### [Source Code](https://github.com/Nikolay-Tymoshchuk/form-test/blob/main/src/Form.js)\n\n### Simple working example you can find\n\n[Here](https://test-form-if.netlify.app/)\n\n###"
+			},
+			"response": []
+		}
+	]
+}
